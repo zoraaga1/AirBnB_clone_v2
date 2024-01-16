@@ -67,8 +67,7 @@ class DBStorage:
         and create the current db session"""
 
         Base.metadata.create_all(self.__engine)
-        db_session = scoped_session(sessionmaker(bind=self.__engine,
-                                              expire_on_commit=False))
+        db_session = scoped_session(sessionmaker(bind=self.__engine, expire_on_commit=False))  # noqa
         self.__session = db_session()
 
     def close(self):

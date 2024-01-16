@@ -11,7 +11,7 @@ class Amenity(BaseModel, Base):
 
     name = Column(String(128), nullable=False)
 
-    place_amenities = relationship("Place", secondary="place_amenity",  backref="amenity")
+    place_amenities = relationship("Place", secondary="place_amenity",  backref="amenity")  # noqa
 
     def __init__(self, *args, **kwargs):
         """initializes aminity"""

@@ -2,23 +2,20 @@
 """ Place Module for HBNB project """
 import models
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, String, ForeignKey, Integer
+from sqlalchemy import Column, String, ForeignKey, Integer, Float
 from sqlalchemy.orm import relationship
-from sqlalchemy import Table, Float
+from sqlalchemy import Table
 from models.amenity import Amenity
 from models.review import Review
 from os import getenv
 
-
-
-
 amenity_table = Table("place_amenity", Base.metadata,
-                          Column("place_id", String(60),
-                                 ForeignKey("places.id"),
-                                 primary_key=True, nullable=False),
-                          Column("amenity_id", String(60),
-                                 ForeignKey("amenities.id"),
-                                 primary_key=True, nullable=False))
+                      Column("place_id", String(60),
+                             ForeignKey("places.id"),
+                             primary_key=True, nullable=False),
+                      Column("amenity_id", String(60),
+                             ForeignKey("amenities.id"),
+                             primary_key=True, nullable=False))
 
 
 class Place(BaseModel, Base):
@@ -36,15 +33,15 @@ class Place(BaseModel, Base):
     longitude = Column(Float)
 
     reviews = relationship('Review', backref='place',
-                               cascade='all, delete-orphan',
-                               passive_deletes=True)
-    
+                           cascade='all, delete-orphan',
+                           passive_deletes=True)
+
     amenities = relationship('Amenity', backref='place_amenities',
-                                 cascade='all, delete',
-                                 secondary="place_amenity",
-                                 viewonly=False,
-                                 passive_deletes=True)
-    
+                             cascade='all, delete',
+                             secondary="place_amenity",
+                             viewonly=False,
+                             passive_deletes=True)
+
     amenity_ids = []
 
     if getenv("HBNB_TYPE_STORAGE", None) != "db":
@@ -68,6 +65,7 @@ class Place(BaseModel, Base):
 
         @amenities.setter
         def amenities(self, value):
-            """setter of aminity"""
-            if type(value) == Amenity:
-                self.amenity_ids.append(value.id)
+            """Setter of amenity."""
+            if not isinstance(value, Amenity):
+                return
+            self.amenity_ids.append(value.id)
