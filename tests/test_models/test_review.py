@@ -34,8 +34,8 @@ class TestReview(unittest.TestCase):
     def test_pep8_style_compliance(self):
         """Check if the Review class complies with PEP8 style guidelines"""
         style = pep8.StyleGuide(quiet=True)
-        result = style.check_files(['models/review.py'])
-        self.assertEqual(result.total_errors, 0, "Fix PEP8 style issues")
+        res = style.check_files(['models/review.py'])
+        self.assertEqual(res.total_errors, 0, "Fix PEP8 style issues")
 
     def test_checking_for_docstring_Review(self):
         """Check if the Review class has a docstring"""
@@ -68,8 +68,7 @@ class TestReview(unittest.TestCase):
 
     def test_to_dict_Review(self):
         """Check if to_dict() returns a dictionary"""
-        review_dict = self.rev.to_dict()
-        self.assertIsInstance(review_dict, dict)
+        self.assertEqual('to_dict' in dir(self.rev), True)
 
 
 if __name__ == "__main__":

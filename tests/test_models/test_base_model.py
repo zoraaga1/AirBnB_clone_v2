@@ -32,8 +32,8 @@ class TestBaseModel(unittest.TestCase):
     def test_pep8_style_compliance(self):
         """Check if the BaseModel class complies with PEP8 style guidelines"""
         style = pep8.StyleGuide(quiet=True)
-        result = style.check_files(['models/base_model.py'])
-        self.assertEqual(result.total_errors, 0, "Fix PEP8 style issues")
+        res = style.check_files(['models/base_model.py'])
+        self.assertEqual(res.total_errors, 0, "Fix PEP8 style issues")
 
     def test_checking_for_docstring_BaseModel(self):
         """Check if the BaseModel class has docstrings"""

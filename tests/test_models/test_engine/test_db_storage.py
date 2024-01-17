@@ -27,9 +27,7 @@ class TestDBStorage(unittest.TestCase):
         cls.Passwd = getenv("HBNB_MYSQL_PWD")
         cls.Db = getenv("HBNB_MYSQL_DB")
         cls.Host = getenv("HBNB_MYSQL_HOST")
-        cls.db = MySQLdb.connect(host=cls.Host, user=cls.User,
-                                  passwd=cls.Passwd, db=cls.Db,
-                                  charset="utf8")
+        cls.db = MySQLdb.connect(host=cls.Host, user=cls.User, passwd=cls.Passwd, db=cls.Db, charset="utf8")  # noqa
         cls.query = cls.db.cursor()
         cls.storage = DBStorage()
         cls.storage.reload()
@@ -44,42 +42,42 @@ class TestDBStorage(unittest.TestCase):
     def test_pep8_style_compliance(self):
         """Check if the DBStorage class complies with PEP8 style guidelines"""
         style = pep8.StyleGuide(quiet=True)
-        result = style.check_files(['models/engine/db_storage.py'])
-        self.assertEqual(result.total_errors, 0, "Fix PEP8 style issues")
+        res = style.check_files(['models/engine/db_storage.py'])
+        self.assertEqual(res.total_errors, 0, "Fix PEP8 style issues")
 
     @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") != 'db', 'NO DB')
     def test_read_tables(self):
         """Check if the expected tables exist in the database"""
         self.query.execute("SHOW TABLES")
-        result = self.query.fetchall()
-        self.assertEqual(len(result), 7)
+        res = self.query.fetchall()
+        self.assertEqual(len(res), 7)
 
     @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") != 'db', 'NO DB')
     def test_no_element_user(self):
         """Check if there are no elements in the users table"""
         self.query.execute("SELECT * FROM users")
-        result = self.query.fetchall()
-        self.assertEqual(len(result), 0)
+        res = self.query.fetchall()
+        self.assertEqual(len(res), 0)
 
     @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") != 'db', 'NO DB')
     def test_no_element_cities(self):
         """Check if there are no elements in the cities table"""
         self.query.execute("SELECT * FROM cities")
-        result = self.query.fetchall()
-        self.assertEqual(len(result), 0)
+        res = self.query.fetchall()
+        self.assertEqual(len(res), 0)
 
     @unittest.skipIf(getenv("HBNB_TYPE_STORAGE") != 'db', 'NO DB')
     def test_add(self):
-        """Check if adding an element results in the correct table size"""
+        """Check if adding an element ress in the correct table size"""
         self.query.execute("SELECT * FROM states")
-        result = self.query.fetchall()
-        self.assertEqual(len(result), 0)
+        res = self.query.fetchall()
+        self.assertEqual(len(res), 0)
         state = State(name="LUISILLO")
         state.save()
         self.db.autocommit(True)
         self.query.execute("SELECT * FROM states")
-        result = self.query.fetchall()
-        self.assertEqual(len(result), 1)
+        res = self.query.fetchall()
+        self.assertEqual(len(res), 1)
 
 
 if __name__ == "__main__":

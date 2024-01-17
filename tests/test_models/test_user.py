@@ -6,6 +6,7 @@ from models.user import User
 import unittest
 import pep8
 
+
 class TestUser(unittest.TestCase):
     """Unit tests for User class"""
 

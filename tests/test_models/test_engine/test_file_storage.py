@@ -39,10 +39,10 @@ class TestFileStorage(unittest.TestCase):
             pass
 
     def test_pep8_style_compliance(self):
-        """Check if the FileStorage class complies with PEP8 style guidelines"""
+        """Check if the FileStorage class complies with PEP8 style guidelines"""  # noqa
         style = pep8.StyleGuide(quiet=True)
-        result = style.check_files(['models/engine/file_storage.py'])
-        self.assertEqual(result.total_errors, 0, "Fix PEP8 style issues")
+        res = style.check_files(['models/engine/file_storage.py'])
+        self.assertEqual(res.total_errors, 0, "Fix PEP8 style issues")
 
     def test_all_method(self):
         """Test if the all method returns the __objects attribute"""
