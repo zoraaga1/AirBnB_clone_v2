@@ -19,7 +19,7 @@ amenity_table = Table("place_amenity", Base.metadata,
 
 
 class Place(BaseModel, Base):
-    """ A place to stay """
+    """ Defines Place Class """
     __tablename__ = "places"
     city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
     user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
@@ -32,22 +32,18 @@ class Place(BaseModel, Base):
     latitude = Column(Float)
     longitude = Column(Float)
 
-    reviews = relationship('Review', backref='place',
-                           cascade='all, delete-orphan',
-                           passive_deletes=True)
+    reviews = relationship("Review", backref="place",
+                           cascade="delete")
 
-    amenities = relationship('Amenity', backref='place_amenities',
-                             cascade='all, delete',
-                             secondary="place_amenity",
-                             viewonly=False,
-                             passive_deletes=True)
+    amenities = relationship('Amenity', secondary="place_amenity",
+                             viewonly=False)
 
     amenity_ids = []
 
     if getenv("HBNB_TYPE_STORAGE", None) != "db":
         @property
         def reviews(self):
-            """Get a list of all linked Reviews."""
+            """Reviews getter"""
             reviewslist = []
             for r in list(models.storage.all(Review).values()):
                 if r.place_id == self.id:
@@ -56,7 +52,7 @@ class Place(BaseModel, Base):
 
         @property
         def amenities(self):
-            """Get/set linked Amenities."""
+            """Amenities getter"""
             amenityslist = []
             for a in list(models.storage.all(Amenity).values()):
                 if a.id in self.amenity_ids:

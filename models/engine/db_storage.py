@@ -13,10 +13,6 @@ from models.user import User
 from models.amenity import Amenity
 
 
-classes = {"User": User, "State": State, "City": City,
-           "Amenity": Amenity, "Place": Place, "Review": Review}
-
-
 class DBStorage:
     """Defines DBStorage class"""
     __engine = None
@@ -40,26 +36,30 @@ class DBStorage:
     def all(self, cls=None):
         """Query on the curr db session"""
 
-        dict = {}
-        for c_ls in classes:
-            if cls is None or cls is classes[c_ls] or cls is c_ls:
-                objs = self.__session.query(classes[c_ls]).all()
-                for obj in objs:
-                    key = obj.__class__.__name__ + '.' + obj.id
-                    dict[key] = obj
-        return dict
+        if cls is None:
+            objs = self.__session.query(State).all()
+            objs.extend(self.__session.query(City).all())
+            objs.extend(self.__session.query(User).all())
+            objs.extend(self.__session.query(Place).all())
+            objs.extend(self.__session.query(Review).all())
+            objs.extend(self.__session.query(Amenity).all())
+        else:
+            if type(cls) == str:
+                cls = eval(cls)
+            objs = self.__session.query(cls)
+        return {"{}.{}".format(type(o).__name__, o.id): o for o in objs}
 
     def new(self, obj):
-        """Add the object to the curr db session"""
+        """Add the new object to the curr db session"""
         self.__session.add(obj)
 
     def save(self):
-        """Commit all changes of the curr db session"""
+        """Commit changes of the curr db session"""
         self.__session.commit()
 
     def delete(self, obj=None):
         """Delete from the curr db session obj if not None"""
-        if obj:
+        if obj is not None:
             self.__session.delete(obj)
 
     def reload(self):
