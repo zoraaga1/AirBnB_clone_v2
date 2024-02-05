@@ -1,54 +1,40 @@
-# 101-setup_web_static.pp
-class web_static_setup {
-  package { 'nginx':
-    ensure => 'installed',
-  }
+# Pupper manifet to redoo ejer 0
 
-  file { '/data':
-    ensure => 'directory',
-    owner  => 'ubuntu',
-    group  => 'ubuntu',
-  }
-
-  file { '/data/web_static':
-    ensure => 'directory',
-    owner  => 'root',
-    group  => 'root',
-  }
-
-  file { '/data/web_static/releases/test':
-    ensure => 'directory',
-    owner  => 'root',
-    group  => 'root',
-  }
-
-  file { '/data/web_static/shared':
-    ensure => 'directory',
-    owner  => 'root',
-    group  => 'root',
-  }
-
-  file { '/data/web_static/releases/test/index.html':
-    ensure  => 'file',
-    owner   => 'root',
-    group   => 'root',
-    content => 'Test content...',
-  }
-
-  file { '/data/web_static/current':
-    ensure => 'link',
-    target => '/data/web_static/releases/test',
-    owner  => 'root',
-    group  => 'root',
-  }
-
-  file_line { 'nginx_hbnb_static':
-    path    => '/etc/nginx/sites-available/default',
-    line    => '    location /hbnb_static/ {',
-    match   => '^}',
-    after   => 'server_name _;',
-    notify  => Service['nginx'],
-  }
+exec { 'update':
+  command => '/usr/bin/apt-get update',
 }
 
-include web_static_setup
+-> package { 'nginx':
+  ensure  => installed,
+}
+
+-> file { ['/data/', '/data/web_static/', '/data/web_static/releases/', '/data/web_static/releases/test', '/data/web_static/shared' ]:
+  ensure => 'directory',
+  owner  => 'ubuntu',
+  group  => 'ubuntu',
+}
+
+-> file { '/data/web_static/releases/test/index.html':
+  content => 'test page',
+  owner   => 'ubuntu',
+  group   => 'ubuntu',
+}
+
+-> file { '/data/web_static/current':
+  ensure => 'link',
+  target => '/data/web_static/releases/test/',
+  force  => yes,
+  owner  => 'ubuntu',
+  group  => 'ubuntu',
+}
+
+-> exec { 'sed':
+  command => '/usr/bin/env sed -i "/listen 80 default_server/a location \
+/hbnb_static/ { alias /data/web_static/current/;}" \
+/etc/nginx/sites-available/default',
+}
+
+-> service { 'nginx':
+  ensure  => running,
+  require => Package['nginx'],
+}
