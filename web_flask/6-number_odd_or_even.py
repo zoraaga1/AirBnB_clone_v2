@@ -49,7 +49,7 @@ def display_number_odd_or_even(n):
         odd_or_even = "even"
     else:
         odd_or_even = "odd"
-    return render_template('6-number_odd_or_even.html', n=n, odd_or_even=odd_or_even)
+    return render_template('6-number_odd_or_even.html', n=n, odd_or_even=odd_or_even)  # noqa
 
 
 if __name__ == "__main__":
